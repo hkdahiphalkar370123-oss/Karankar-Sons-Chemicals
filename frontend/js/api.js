@@ -1,6 +1,6 @@
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000/api'
-    : 'https://karankar-backend.onrender.com/api';
+    : 'https://karankar-backend.onrender.com/api'; // Replace with your ACTUAL Render URL if different
 
 const SOCKET_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000'
@@ -78,7 +78,16 @@ const apiFetch = async (endpoint, method = 'GET', body = null, options = {}) => 
         const response = await fetch(`${API_BASE_URL}${endpoint}`, apiOptions);
         clearTimeout(timeoutId);
 
-        const data = await response.json();
+        // Check content type before parsing as JSON
+        const contentType = response.headers.get('content-type');
+        let data;
+        if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+        } else {
+            const text = await response.text();
+            console.error(`⚠️ API returned non-JSON response from ${endpoint}:`, text.slice(0, 200));
+            throw new Error('Server returned an unexpected response format. Please check backend logs.');
+        }
 
         // Hide loading
         if (showLoading) {
@@ -86,12 +95,14 @@ const apiFetch = async (endpoint, method = 'GET', body = null, options = {}) => 
         }
 
         if (!response.ok) {
-            const errorMessage = data.error || 'API request failed';
+            const errorMessage = data.error || data.message || 'API request failed';
             
+            console.error(`❌ API Error (${response.status}) at ${endpoint}:`, data);
+
             // Handle authentication errors
             if (response.status === 401) {
                 clearAuthState();
-                window.location.href = '/login.html';
+                window.location.href = '/login';
                 throw new Error('Session expired. Please login again.');
             }
 
@@ -127,18 +138,12 @@ const apiFetch = async (endpoint, method = 'GET', body = null, options = {}) => 
         }
 
         // Log error for debugging
-        console.error('API Error:', {
-            endpoint,
+        console.error('🌐 Network/API Error:', {
+            url: `${API_BASE_URL}${endpoint}`,
             method,
             message: err.message,
-            statusCode: err.statusCode,
             timestamp: new Date().toISOString()
         });
-
-        // Show default error message if not already shown
-        if (showError && !err.message.includes('Session expired')) {
-            // Error already shown above, only show if it wasn't
-        }
 
         throw err;
     }

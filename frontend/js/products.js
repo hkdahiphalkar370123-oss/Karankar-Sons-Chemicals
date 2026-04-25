@@ -18,10 +18,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const resolveImageUrl = (imageUrl) => {
     if (!imageUrl) return 'assets/img/chemical_coating.png';
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return 'assets/img/chemical_coating.png';
+    // If it's a full URL (like Unsplash), use it directly
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
     }
+    // If it's a relative path starting with /, use as is
     if (imageUrl.startsWith('/')) return imageUrl;
+    // Default fallback
     return imageUrl;
   };
 
