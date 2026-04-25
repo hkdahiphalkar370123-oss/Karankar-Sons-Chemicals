@@ -148,6 +148,16 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const packageRoutes = require('./routes/packageRoutes');
+
+// [DEBUG] Manual Seed Route
+app.get('/api/debug/seed', async (req, res) => {
+    try {
+        const result = await seedDatabase({ reset: true });
+        res.json({ success: true, message: 'Seeding triggered manually', result });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message, stack: error.stack });
+    }
+});
 const categoryRoutes = require('./routes/categoryRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const cartRoutes = require('./routes/cartRoutes');
