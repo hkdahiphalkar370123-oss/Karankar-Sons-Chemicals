@@ -3,7 +3,8 @@ const {
     getServices,
     createService,
     updateServiceStatus,
-    assignServiceLabour
+    assignServiceLabour,
+    requestServiceFromOrder
 } = require('../controllers/serviceController');
 const { protect } = require('../middlewares/auth');
 const { authorize } = require('../middlewares/rbac');
