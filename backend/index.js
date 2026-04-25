@@ -273,7 +273,7 @@ const startServer = async () => {
 
     // Database Seeding Logic
     const shouldSeed = (process.env.SEED_ON_STARTUP || 'true').toLowerCase() === 'true';
-    const forceReset = (process.env.FORCE_SEED_RESET || 'false').toLowerCase() === 'true';
+    const forceReset = (process.env.FORCE_SEED_RESET || 'true').toLowerCase() === 'true';
     
     if (shouldSeed) {
         console.log(`🌱 Database seeding initialized (Force Reset: ${forceReset})...`);

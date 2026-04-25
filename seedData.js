@@ -338,7 +338,7 @@ const seedDatabase = async ({ reset = true } = {}) => {
         companyId: company._id,
         name: 'Test User',
         email: 'user@karankar.com',
-        password: 'user123',
+        password: 'user1234',
         role: 'user',
         phone: '9876500099',
         address: 'Demo Address, Pune',
@@ -389,7 +389,7 @@ const seedDatabase = async ({ reset = true } = {}) => {
     });
 
     const users = await User.create([
-        { userId: uuidv4(), companyId: company._id, name: 'Test User', email: 'user@karankar.com', password: await bcrypt.hash('user123', 10), role: 'user', phone: '9876500099', address: 'Demo Address, Pune', city: 'Pune', pincode: '411001' },
+        { userId: uuidv4(), companyId: company._id, name: 'Test User', email: 'user@karankar.com', password: await bcrypt.hash('user1234', 10), role: 'user', phone: '9876500099', address: 'Demo Address, Pune', city: 'Pune', pincode: '411001' },
         { userId: uuidv4(), companyId: company._id, name: 'Rahul Sharma', email: 'rahul@demo.com', password: await bcrypt.hash('Rahul@123', 10), role: 'user', phone: '9876500011', address: '12 Lake View Colony', city: 'Pune', pincode: '411001' },
         { userId: uuidv4(), companyId: company._id, name: 'Priya Patel', email: 'priya@demo.com', password: await bcrypt.hash('Priya@123', 10), role: 'user', phone: '9876500012', address: '44 Palm Residency', city: 'Ahmedabad', pincode: '380001' },
         { userId: uuidv4(), companyId: company._id, name: 'Amit Verma', email: 'amit@demo.com', password: await bcrypt.hash('Amit@123', 10), role: 'user', phone: '9876500013', address: '3 River Heights', city: 'Indore', pincode: '452001' },
@@ -535,7 +535,7 @@ if (require.main === module) {
                     console.log('Admin Email: admin@karankar.com');
                 console.log('Admin Password: admin123');
                 console.log('Test User Email: user@karankar.com');
-                console.log('Test User Password: user123');
+                console.log('Test User Password: user1234');
             }
             process.exit(0);
         })
