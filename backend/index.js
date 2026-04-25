@@ -276,13 +276,16 @@ const startServer = async () => {
     const forceReset = (process.env.FORCE_SEED_RESET || 'true').toLowerCase() === 'true';
     
     if (shouldSeed) {
-        console.log(`🌱 Database seeding initialized (Force Reset: ${forceReset})...`);
-        const seedResult = await seedDatabase({ reset: forceReset });
-        if (seedResult.skipped) {
-            console.log('✓ Startup seed skipped: data already exists. (Set FORCE_SEED_RESET=true to overwrite)');
-        } else {
-            console.log(`✅ Seed complete: ${seedResult.users} users, ${seedResult.products} products, ${seedResult.sites} sites created.`);
-        }
+        // Run seeding in background so server can start immediately
+        seedDatabase({ reset: forceReset })
+            .then(seedResult => {
+                if (seedResult.skipped) {
+                    console.log('✓ Startup seed skipped: data already exists.');
+                } else {
+                    console.log(`✅ Seed complete: ${seedResult.users} users, ${seedResult.products} products created.`);
+                }
+            })
+            .catch(err => console.error('❌ Background seeding failed:', err.message));
     }
 
     const HOST = process.env.HOST || '0.0.0.0';
