@@ -1,10 +1,10 @@
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000/api'
-    : 'https://karankar-backend.onrender.com/api'; // Replace with your ACTUAL Render URL if different
+    : 'https://karankar-sons-chemicals.onrender.com/api';
 
 const SOCKET_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000'
-    : 'https://karankar-backend.onrender.com';
+    : 'https://karankar-sons-chemicals.onrender.com';
 
 // Socket.io initialization
 let socket;
