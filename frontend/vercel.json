@@ -4,13 +4,20 @@
     { "source": "/products", "destination": "/products.html" },
     { "source": "/cart", "destination": "/user-dashboard.html" },
     { "source": "/dashboard", "destination": "/user-dashboard.html" },
+    { "source": "/user-dashboard", "destination": "/user-dashboard.html" },
     { "source": "/orders", "destination": "/user-dashboard.html" },
     { "source": "/profile", "destination": "/user-dashboard.html" },
+    { "source": "/dashboard/bookings", "destination": "/user-dashboard.html" },
+    { "source": "/dashboard/sites", "destination": "/user-dashboard.html" },
+    { "source": "/dashboard/invoices", "destination": "/user-dashboard.html" },
     { "source": "/admin", "destination": "/admin-dashboard.html" },
+    { "source": "/admin-dashboard", "destination": "/admin-dashboard.html" },
     { "source": "/admin/:path*", "destination": "/admin-dashboard.html" },
     { "source": "/checkout", "destination": "/checkout.html" },
     { "source": "/service-booking", "destination": "/service-booking.html" },
-    { "source": "/login", "destination": "/login.html" }
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/order-detail", "destination": "/order-detail.html" },
+    { "source": "/product-detail", "destination": "/product-detail.html" }
   ],
   "trailingSlash": false
 }
