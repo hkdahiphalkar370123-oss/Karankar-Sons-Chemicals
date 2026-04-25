@@ -1,0 +1,26 @@
+Frontend:
+HTML5
+CSS3 (Custom Styling with Animations & Glassmorphism)
+Vanilla JavaScript (DOM Manipulation, API Integration)
+Responsive Design (Flexbox, Grid)
+
+Backend:
+Node.js
+Express.js
+CORS, Body-parser, Dotenv
+Mongoose
+
+Database:
+MongoDB (NoSQL database)
+
+Libraries & Dependencies:
+Axios (Frontend API calls - expected if CDN included, else Fetch API used)
+Bcrypt (Password Hashing)
+JSONWebToken (JWT Authentication)
+Mongoose (MongoDB object modeling)
+Dotenv (Environment variables)
+Cors (Cross-Origin Resource Sharing)
+
+Additional Tools:
+Font Awesome (for icons, if needed)
+Google Fonts (Inter, modern typography)

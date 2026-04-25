@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Booking | Karankar Sons</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/feedback.css">
+  <script src="/js/api.js"></script>
+  <script src="/js/ui-components.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="/" class="logo"><span class="logo-icon">💧</span> Karankar Sons</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/#estimate-section">Estimate</a></li>
+        <li><a href="/#contact-us">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="section-padding">
+    <div class="container" style="max-width: 900px;">
+      <div class="card" style="background: linear-gradient(180deg, rgba(15,118,110,0.08), rgba(255,255,255,0.95));">
+        <div class="grid-2" style="align-items:start; gap:1.25rem;">
+          <div>
+            <h1 style="margin-bottom:0.75rem;">Request Detailed Quote</h1>
+            <p style="color:#51616b; margin-bottom:1.25rem;">Use this page to request a site inspection and detailed quotation after your quick estimate.</p>
+            <div class="card" style="padding:1rem; margin-bottom:1rem; background:rgba(255,255,255,0.7);">
+              <strong style="display:block; margin-bottom:0.35rem;">What happens next</strong>
+              <p style="margin:0; color:#51616b;">We review your requirement, schedule inspection, and provide a final quotation after site assessment.</p>
+            </div>
+            <a href="/login.html" id="sb-login-btn" class="btn btn-outline">Login to Submit Booking</a>
+          </div>
+
+          <div class="card" style="margin:0; background: rgba(255,255,255,0.86);">
+            <h3 style="margin-bottom:1rem;">Booking Request</h3>
+            <div id="service-booking-msg" style="display:none; margin-bottom:1rem; padding:0.8rem 1rem; border-radius:12px; font-weight:600;"></div>
+            <form id="service-booking-form">
+              <div class="form-group">
+                <label class="form-label">Service Type</label>
+                <input id="sb-serviceName" class="form-control" value="Detailed Waterproofing Quote" required>
+              </div>
+              <div class="grid-2" style="margin-bottom:0;">
+                <div class="form-group">
+                  <label class="form-label">Project Type</label>
+                  <select id="sb-projectType" class="form-control">
+                    <option value="Repair Work">Repair Work</option>
+                    <option value="New Construction">New Construction</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Preferred Start Date</label>
+                  <input id="sb-startDate" type="date" class="form-control" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Site Address</label>
+                <input id="sb-siteAddress" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea id="sb-notes" class="form-control" rows="3" placeholder="Tell us about the area, leak issue, or surface type."></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit" style="width:100%;">Submit Booking Request</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/service-booking.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

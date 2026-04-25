@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard | Karankar Sons</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/feedback.css">
+  <script src="/js/api.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/ui-components.js"></script>
+  <script src="/js/pagination.js"></script>
+</head>
+<body class="dashboard-body dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Customer Area</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/dashboard" class="nav-item active" data-section="overview" data-route="/dashboard">Dashboard</a>
+      <a href="/orders" class="nav-item" data-section="orders" data-route="/orders">Orders</a>
+      <a href="/profile" class="nav-item" data-section="profile" data-route="/profile">Profile</a>
+      <a href="/cart" class="nav-item" data-section="cart" data-route="/cart">Cart</a>
+      <a href="/dashboard/bookings" class="nav-item" data-section="bookings" data-route="/dashboard/bookings">Service Booking</a>
+      <a href="/dashboard/sites" class="nav-item" data-section="sites" data-route="/dashboard/sites">Site Tracking</a>
+      <a href="/dashboard/invoices" class="nav-item" data-section="invoices" data-route="/dashboard/invoices">Invoices</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" id="user-logout" class="nav-item" style="padding: 0;">Logout</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header top-navbar">
+      <div class="header-left">
+        <button class="sidebar-toggle">☰</button>
+        <h1 style="font-size: 1.2rem; margin: 0;">Customer Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <a href="/" class="btn btn-outline" style="margin-right: 0.8rem;">Back to Home</a>
+      </div>
+    </header>
+
+    <div class="content-wrapper dashboard-content">
+      <section id="overview" class="dashboard-section active" data-section="overview" style="margin-bottom: 2rem;">
+        <div class="page-title">
+          <h2>User Dashboard</h2>
+        </div>
+        <div class="grid-3" style="margin-bottom: 1rem;">
+          <div class="stat-card">
+            <span class="stat-title">Total Orders</span>
+            <span class="stat-value" id="u-total-orders">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Active Bookings</span>
+            <span class="stat-value" id="u-active-bookings">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Active Sites</span>
+            <span class="stat-value" id="u-active-sites">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Pending Services</span>
+            <span class="stat-value" id="u-pending-services">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Total Spent</span>
+            <span class="stat-value" id="u-total-spent">₹0.00</span>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom: 1rem;">
+          <h3 style="margin-bottom: 0.7rem;">Profile Summary</h3>
+          <div id="profile-summary"></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom: 0.7rem;">Recent Orders</h3>
+          <div id="recent-orders-summary"></div>
+        </div>
+      </section>
+
+      <section id="profile" class="dashboard-section" data-section="profile" style="margin-bottom: 2rem;">
+        <div class="page-title">
+          <h2>Profile</h2>
+        </div>
+        <div class="card">
+          <form id="profile-form">
+            <div class="grid-2" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label">Name</label>
+                <input id="profile-name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input id="profile-email" class="form-control" readonly>
+              </div>
+            </div>
+            <div class="grid-2" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input id="profile-phone" class="form-control" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input id="profile-address" class="form-control" required>
+            </div>
+            <div class="grid-2" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <input id="profile-city" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Pincode</label>
+                <input id="profile-pincode" class="form-control" required>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Update Profile</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="orders" class="dashboard-section" data-section="orders">
+        <div class="page-title">
+          <h2>Order History</h2>
+        </div>
+        <div class="table-container table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Items</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="user-orders-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="cart" class="dashboard-section" data-section="cart">
+        <div class="page-title">
+          <h2>Cart</h2>
+        </div>
+        <div class="table-container table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="user-cart-table"></tbody>
+          </table>
+        </div>
+        <div style="display:flex;justify-content:flex-end; margin-top: 1rem; font-weight: 700; font-size: 1.1rem;">
+          Total: <span id="user-cart-total" style="margin-left: 0.4rem;">₹0.00</span>
+        </div>
+        <div style="display:flex;justify-content:flex-end; margin-top: 1rem;">
+          <button id="cart-checkout-btn" class="btn btn-primary" type="button">Proceed to Checkout</button>
+        </div>
+      </section>
+
+      <section id="bookings" class="dashboard-section" data-section="bookings" style="margin-bottom: 2rem;">
+        <div class="page-title"><h2>Service Booking</h2></div>
+        <div class="card" style="margin-bottom: 1rem;">
+          <form id="service-booking-form">
+            <div class="grid-2" style="margin-bottom:0;">
+              <div class="form-group"><label class="form-label">Service Type</label><input id="b-serviceType" class="form-control" placeholder="Waterproofing Application" required></div>
+              <div class="form-group"><label class="form-label">Project Type</label><select id="b-projectType" class="form-control"><option value="Repair Work">Repair Work</option><option value="New Construction">New Construction</option></select></div>
+            </div>
+            <div class="form-group"><label class="form-label">Site Address</label><input id="b-siteAddress" class="form-control" required></div>
+            <div class="grid-2" style="margin-bottom:0;">
+              <div class="form-group"><label class="form-label">Preferred Start Date</label><input id="b-startDate" type="date" class="form-control" required></div>
+              <div class="form-group"><label class="form-label">Additional Notes</label><input id="b-notes" class="form-control"></div>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit Booking</button>
+          </form>
+        </div>
+        <div class="table-container table-wrapper"><table><thead><tr><th>Booking ID</th><th>Service Type</th><th>Address</th><th>Start Date</th><th>Status</th></tr></thead><tbody id="user-bookings-table"></tbody></table></div>
+      </section>
+
+      <section id="sites" class="dashboard-section" data-section="sites" style="margin-bottom: 2rem;">
+        <div class="page-title"><h2>Site Progress Tracking</h2></div>
+        <div class="table-container table-wrapper"><table><thead><tr><th>Site Name</th><th>Assigned Labour</th><th>Start Date</th><th>Expected Completion</th><th>Status</th></tr></thead><tbody id="user-sites-table"></tbody></table></div>
+      </section>
+
+      <section id="invoices" class="dashboard-section" data-section="invoices">
+        <div class="page-title"><h2>Invoices</h2></div>
+        <div class="table-container table-wrapper"><table><thead><tr><th>Invoice Number</th><th>Order</th><th>Total</th><th>Date</th><th>Actions</th></tr></thead><tbody id="user-invoices-table"></tbody></table></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/user-dashboard.js"></script>
+</body>
+</html>

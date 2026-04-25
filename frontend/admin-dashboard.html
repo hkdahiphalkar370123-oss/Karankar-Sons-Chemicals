@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Karankar Sons</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/feedback.css">
+  <script src="/js/api.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/ui-components.js"></script>
+  <script src="/js/pagination.js"></script>
+</head>
+<body class="dashboard-body dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Admin Panel</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard" class="nav-item active" data-section="overview" data-route="/admin/dashboard">📊 Overview</a>
+      <a href="/admin/products" class="nav-item" data-section="products" data-route="/admin/products">📦 Products</a>
+      <a href="/admin/orders" class="nav-item" data-section="orders" data-route="/admin/orders">🧾 Orders</a>
+      <a href="/admin/sites" class="nav-item" data-section="sites" data-route="/admin/sites">🏢 Site Management</a>
+      <a href="/admin/users" class="nav-item" data-section="users" data-route="/admin/users">👥 Customers</a>
+      <a href="/admin/quotations" class="nav-item" data-section="quotations" data-route="/admin/quotations">🧾 Quotation Management</a>
+      <a href="/admin/bookings" class="nav-item" data-section="bookings" data-route="/admin/bookings">📅 Service Bookings</a>
+      <a href="/admin/invoices" class="nav-item" data-section="invoices" data-route="/admin/invoices">🧾 Invoices</a>
+      <a href="/admin/analytics" class="nav-item" data-section="analytics" data-route="/admin/analytics">📈 Analytics</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" id="admin-logout" class="nav-item" style="padding: 0;">Logout</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header top-navbar">
+      <div class="header-left">
+        <button class="sidebar-toggle">☰</button>
+        <h1 style="font-size: 1.2rem; margin: 0;">Karankar Sons Admin Panel</h1>
+      </div>
+      <div class="header-right">
+        <a href="/" class="btn btn-outline" style="margin-right: 0.8rem;">Back to Home</a>
+      </div>
+    </header>
+
+    <div class="content-wrapper dashboard-content">
+      <section id="overview" class="dashboard-section active" data-section="overview" style="margin-bottom: 2rem;">
+        <div class="page-title">
+          <h2>Overview</h2>
+        </div>
+        <div class="grid-4">
+          <div class="stat-card">
+            <span class="stat-title">Total Products</span>
+            <span class="stat-value" id="stat-products">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Total Orders</span>
+            <span class="stat-value" id="stat-orders">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Active Sites</span>
+            <span class="stat-value" id="stat-active-sites">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Open Quotations</span>
+            <span class="stat-value" id="stat-open-quotations">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-title">Monthly Revenue</span>
+            <span class="stat-value" id="stat-monthly-revenue">₹0</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="products" class="dashboard-section" data-section="products" style="margin-bottom: 2rem;">
+        <div class="page-title">
+          <h2>Product Management</h2>
+        </div>
+
+        <div class="card" style="margin-bottom: 1rem;">
+          <h3 style="margin-bottom: 1rem;">Add Product</h3>
+          <form id="product-form">
+            <div class="grid-3" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label">Product Name</label>
+                <input id="p-name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="p-category" class="form-control" required>
+                  <option value="Repair Work">Repair Work</option>
+                  <option value="New Construction">New Construction</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Price</label>
+                <input id="p-price" type="number" min="0" class="form-control" required>
+              </div>
+            </div>
+            <div class="grid-3" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label">Unit</label>
+                <select id="p-unit" class="form-control" required>
+                  <option value="kg">kg</option>
+                  <option value="litre">litre</option>
+                  <option value="pack">pack</option>
+                  <option value="bag">bag</option>
+                  <option value="bucket">bucket</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Stock</label>
+                <input id="p-stock" type="number" min="0" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Discount %</label>
+                <input id="p-discount" type="number" min="0" max="100" value="0" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea id="p-description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Image</label>
+              <input id="p-image" type="file" accept="image/*" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="p-status" class="form-control">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Create Product</button>
+          </form>
+        </div>
+
+        <div class="table-container table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="products-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="orders" class="dashboard-section" data-section="orders" style="margin-bottom: 2rem;">
+        <div class="page-title">
+          <h2>Order Management</h2>
+        </div>
+        <div class="table-container table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Products</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Details</th>
+                <th>Update</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="users" class="dashboard-section" data-section="users">
+        <div class="page-title">
+          <h2>Customer Data</h2>
+        </div>
+        <div class="table-container table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer Name</th>
+                <th>Phone</th>
+                <th>Site</th>
+                <th>Warranty</th>
+              </tr>
+            </thead>
+            <tbody id="users-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="sites" class="dashboard-section" data-section="sites">
+        <div class="page-title">
+          <h2>Site Management</h2>
+        </div>
+
+        <div class="card" style="margin-bottom: 1rem;">
+          <h3 style="margin-bottom: 1rem;">Create Site</h3>
+          <form id="site-form">
+            <div class="grid-3" style="margin-bottom:0;">
+              <div class="form-group">
+                <label class="form-label">Site ID (Optional)</label>
+                <input id="s-siteId" class="form-control" placeholder="Auto generated if empty">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Customer Name</label>
+                <input id="s-customerName" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Customer Phone</label>
+                <input id="s-customerPhone" class="form-control" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Site Address</label>
+              <input id="s-siteAddress" class="form-control" required>
+            </div>
+            <div class="grid-3" style="margin-bottom:0;">
+              <div class="form-group">
+                <label class="form-label">Project Type</label>
+                <select id="s-projectType" class="form-control" required>
+                  <option value="Repair Work">Repair Work</option>
+                  <option value="New Construction">New Construction</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Work Type</label>
+                <input id="s-workType" class="form-control" placeholder="Terrace / Bathroom / Basement" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Status</label>
+                <select id="s-status" class="form-control" required>
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid-3" style="margin-bottom:0;">
+              <div class="form-group">
+                <label class="form-label">Start Date</label>
+                <input id="s-startDate" type="date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Expected End Date</label>
+                <input id="s-endDate" type="date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Select Warranty Period</label>
+                <select id="s-warranty" class="form-control" required>
+                  <option value="No Warranty">No Warranty</option>
+                  <option value="1 Year">1 Year</option>
+                  <option value="2 Years">2 Years</option>
+                  <option value="3 Years">3 Years</option>
+                  <option value="5 Years">5 Years</option>
+                  <option value="10 Years">10 Years</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Create Site</button>
+          </form>
+          <div id="site-message" style="margin-top: 0.8rem; font-weight: 600;"></div>
+        </div>
+
+        <div class="table-container table-wrapper">
+          <table class="site-table">
+            <thead>
+              <tr>
+                <th class="site-id-column">Site ID</th>
+                <th class="customer-column">Customer Name</th>
+                <th class="address-column">Address</th>
+                <th class="work-type-column">Work Type</th>
+                <th>Warranty</th>
+                <th class="date-column">Date</th>
+                <th class="actions-column">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sitesTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;" id="siteDetailsSection">
+          <h3 style="margin-bottom: 0.8rem;">Site Details</h3>
+          <div id="site-details">Select "View Details" from table to load site information.</div>
+        </div>
+      </section>
+
+      <section id="quotations" class="dashboard-section" data-section="quotations" style="margin-bottom: 2rem;">
+        <div class="page-title"><h2>Quotation Management</h2></div>
+        <div style="align-items:start; gap: 1rem;">
+          <div class="card" style="margin-bottom: 1rem;">
+            <form id="quotation-form">
+              <div class="page-title" style="margin-bottom: 1rem;"><h3>Site Details</h3></div>
+              <div class="grid-3" style="margin-bottom:0;">
+                <div class="form-group"><label class="form-label">Customer Name</label><input id="q-customerName" class="form-control" required></div>
+                <div class="form-group"><label class="form-label">Customer Phone</label><input id="q-customerPhone" class="form-control" required></div>
+                <div class="form-group"><label class="form-label">Customer Email</label><input id="q-customerEmail" type="email" class="form-control"></div>
+              </div>
+              <div class="form-group"><label class="form-label">Site Address</label><input id="q-siteAddress" class="form-control" required></div>
+              <div class="grid-3" style="margin-bottom:0;">
+                <div class="form-group"><label class="form-label">Project Type</label><select id="q-projectType" class="form-control"><option value="Repair Work">Repair Work</option><option value="New Construction">New Construction</option></select></div>
+                <div class="form-group"><label class="form-label">Work Type</label><input id="q-workType" class="form-control" required placeholder="Terrace / Bathroom / Basement"></div>
+                <div class="form-group"><label class="form-label">Surface Type</label><select id="q-surfaceType" class="form-control" title="Auto-fills the average price per sq.ft."><option value="">Select surface type</option><option value="Roof Waterproofing">Roof Waterproofing</option><option value="Terrace Waterproofing">Terrace Waterproofing</option><option value="Bathroom Waterproofing">Bathroom Waterproofing</option><option value="Basement Waterproofing">Basement Waterproofing</option><option value="Wall Crack Repair">Wall Crack Repair</option><option value="Tank Waterproofing">Tank Waterproofing</option></select></div>
+              </div>
+
+              <div class="page-title" style="margin: 1.5rem 0 1rem;"><h3>Pricing Details</h3></div>
+              <div class="grid-3" style="margin-bottom:0;">
+                <div class="form-group"><label class="form-label">Site Area (sq.ft)</label><input id="q-area" type="number" min="0" step="0.01" class="form-control" required title="Enter the measured area in square feet."></div>
+                <div class="form-group"><label class="form-label">Average Price per sq.ft</label><input id="q-pricePerSqft" type="number" min="0" step="0.01" class="form-control" title="Auto-filled from the selected surface type, but editable."></div>
+                <div class="form-group"><label class="form-label">Material Cost</label><input id="q-materialCost" type="number" min="0" step="0.01" class="form-control" value="0"></div>
+              </div>
+              <div class="grid-3" style="margin-bottom:0;">
+                <div class="form-group"><label class="form-label">Labour Cost</label><input id="q-labourCost" type="number" min="0" step="0.01" class="form-control" value="0"></div>
+                <div class="form-group"><label class="form-label">Additional Charges</label><input id="q-additionalCharges" type="number" min="0" step="0.01" class="form-control" value="0"></div>
+                <div class="form-group"><label class="form-label">Discount (%)</label><input id="q-discount" type="number" min="0" max="100" step="0.01" class="form-control" value="0"></div>
+              </div>
+              <div class="grid-2" style="margin-bottom:0; align-items:end;">
+                <div class="form-group"><label class="form-label">GST (%)</label><input id="q-gst" type="number" min="0" max="100" step="0.01" class="form-control" value="18" title="Applied on the discounted subtotal."></div>
+                <div class="form-group"><label class="form-label">Final Estimate</label><input id="q-totalEstimatedCost" type="number" min="0" step="0.01" class="form-control" readonly></div>
+              </div>
+
+              <div class="page-title" style="margin: 1.5rem 0 1rem;"><h3>Calculation Summary</h3></div>
+              <div class="grid-2" style="margin-bottom:0;">
+                <div class="form-group"><label class="form-label">Base Amount</label><input id="q-baseAmount" type="number" min="0" step="0.01" class="form-control" readonly></div>
+                <div class="form-group"><label class="form-label">Status</label><select id="q-status" class="form-control"><option value="Draft">Draft</option><option value="Sent">Sent</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option></select></div>
+              </div>
+              <div class="form-group"><label class="form-label">Notes</label><textarea id="q-notes" class="form-control" rows="2"></textarea></div>
+              <button class="btn btn-primary" type="submit">Save Quotation</button>
+            </form>
+          </div>
+        </div>
+        <div class="table-container table-wrapper"><table><thead><tr><th>Quotation ID</th><th>Customer</th><th>Surface Type</th><th>Total Estimate</th><th>Status</th><th>Actions</th></tr></thead><tbody id="quotations-table"></tbody></table></div>
+      </section>
+
+      <section id="bookings" class="dashboard-section" data-section="bookings" style="margin-bottom: 2rem;">
+        <div class="page-title"><h2>Service Bookings</h2></div>
+        <div class="table-container table-wrapper"><table><thead><tr><th>Booking ID</th><th>Customer</th><th>Service</th><th>Address</th><th>Start Date</th><th>Status</th></tr></thead><tbody id="bookings-table"></tbody></table></div>
+      </section>
+
+      <section id="invoices" class="dashboard-section" data-section="invoices" style="margin-bottom: 2rem;">
+        <div class="page-title"><h2>Invoices</h2></div>
+        <div class="table-container table-wrapper"><table><thead><tr><th>Invoice Number</th><th>Order</th><th>Customer</th><th>Total</th><th>Date</th><th>Actions</th></tr></thead><tbody id="invoices-table"></tbody></table></div>
+      </section>
+
+      <section id="analytics" class="dashboard-section" data-section="analytics">
+        <div class="page-title"><h2>Analytics Dashboard</h2></div>
+        <div class="grid-4" style="margin-bottom:1rem;">
+          <div class="stat-card"><span class="stat-title">Total Orders</span><span class="stat-value" id="an-total-orders">0</span></div>
+          <div class="stat-card"><span class="stat-title">Total Revenue</span><span class="stat-value" id="an-total-revenue">₹0</span></div>
+          <div class="stat-card"><span class="stat-title">Active Sites</span><span class="stat-value" id="an-active-sites">0</span></div>
+          <div class="stat-card"><span class="stat-title">Completed Projects</span><span class="stat-value" id="an-completed-projects">0</span></div>
+        </div>
+        <div class="card" style="margin-bottom:1rem;"><h3>Monthly Revenue Chart</h3><div id="revenue-chart"></div></div>
+        <div class="card"><h3>Site Progress Chart</h3><div id="site-progress-chart"></div></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Karankar Sons</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/feedback.css">
+  <script src="/js/api.js"></script>
+  <script src="/js/ui-components.js"></script>
+  <script src="/js/pagination.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">💧</span> Karankar Sons
+      </a>
+      <ul class="nav-links">
+        <li><a href="products.html">Products</a></li>
+        <li><a href="user-dashboard.html">Dashboard</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="section-padding">
+    <div class="container" style="max-width: 1100px;">
+      <div class="page-title">
+        <h2>Checkout</h2>
+      </div>
+      <div class="grid-2" style="align-items: start;">
+        <div class="card">
+          <h3 style="margin-bottom: 1rem;">Shipping Details</h3>
+          <form id="checkout-form">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input id="c-fullName" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input id="c-address" class="form-control" required>
+            </div>
+            <div class="grid-2" style="margin-bottom: 0;">
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input id="c-phone" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <input id="c-city" class="form-control" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pincode</label>
+              <input id="c-pincode" class="form-control" required>
+            </div>
+            <div class="card" style="padding: 1rem; margin-bottom: 1rem; border: 1px dashed var(--border-color);">
+              <div class="form-group" style="margin-bottom: 0.5rem;">
+                <label style="display:flex; align-items:center; gap: 0.5rem; font-weight: 600;">
+                  <input type="checkbox" id="c-service-required">
+                  Need labour service for this order
+                </label>
+              </div>
+              <div class="grid-2" style="margin-bottom: 0;">
+                <div class="form-group">
+                  <label class="form-label">Project Type</label>
+                  <select id="c-project-type" class="form-control">
+                    <option value="Repair Work">Repair Work</option>
+                    <option value="New Construction">New Construction</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Work Type</label>
+                  <input id="c-work-type" class="form-control" placeholder="Terrace / Bathroom / Basement">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Expected Completion Date</label>
+                <input id="c-service-end" type="date" class="form-control">
+              </div>
+            </div>
+            <button type="submit" id="checkout-submit" class="btn btn-primary" style="width: 100%;">Pay with Razorpay</button>
+          </form>
+          <div id="checkout-msg" style="margin-top: 1rem; font-weight: 600;"></div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem;">Order Summary</h3>
+          <div id="checkout-items"></div>
+          <hr style="margin: 1rem 0;">
+          <div style="display:flex; justify-content: space-between; font-size:1rem; margin-bottom: 0.4rem;">
+            <span>Subtotal</span>
+            <span id="checkout-subtotal">₹0</span>
+          </div>
+          <div style="display:flex; justify-content: space-between; font-size:1.2rem; font-weight:700;">
+            <span>Total</span>
+            <span id="checkout-total">₹0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/checkout.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>
