@@ -261,13 +261,17 @@ const startServer = async () => {
         console.warn('⚠️  Backup system initialization failed:', error.message);
     }
 
+    // Database Seeding Logic
     const shouldSeed = (process.env.SEED_ON_STARTUP || 'true').toLowerCase() === 'true';
+    const forceReset = (process.env.FORCE_SEED_RESET || 'false').toLowerCase() === 'true';
+    
     if (shouldSeed) {
-        const seedResult = await seedDatabase({ reset: false });
+        console.log(`🌱 Database seeding initialized (Force Reset: ${forceReset})...`);
+        const seedResult = await seedDatabase({ reset: forceReset });
         if (seedResult.skipped) {
-            console.log('✓ Startup seed skipped: data already exists.');
+            console.log('✓ Startup seed skipped: data already exists. (Set FORCE_SEED_RESET=true to overwrite)');
         } else {
-            console.log(`✓ Startup seed completed. Products: ${seedResult.products}`);
+            console.log(`✅ Seed complete: ${seedResult.users} users, ${seedResult.products} products, ${seedResult.sites} sites created.`);
         }
     }
 
