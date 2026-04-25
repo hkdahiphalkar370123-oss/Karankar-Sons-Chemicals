@@ -148,16 +148,6 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const packageRoutes = require('./routes/packageRoutes');
-
-// [DEBUG] Manual Seed Route
-app.get('/api/debug/seed', async (req, res) => {
-    try {
-        const result = await seedDatabase({ reset: true });
-        res.json({ success: true, message: 'Seeding triggered manually', result });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message, stack: error.stack });
-    }
-});
 const categoryRoutes = require('./routes/categoryRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const cartRoutes = require('./routes/cartRoutes');
@@ -283,7 +273,7 @@ const startServer = async () => {
 
     // Database Seeding Logic
     const shouldSeed = (process.env.SEED_ON_STARTUP || 'true').toLowerCase() === 'true';
-    const forceReset = (process.env.FORCE_SEED_RESET || 'true').toLowerCase() === 'true';
+    const forceReset = (process.env.FORCE_SEED_RESET || 'false').toLowerCase() === 'true';
     
     if (shouldSeed) {
         console.log(`🌱 Database seeding initialized (Force Reset: ${forceReset})...`);

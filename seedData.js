@@ -311,10 +311,7 @@ const seedSites = (companyId, users, orders) => {
 };
 
 const seedDatabase = async ({ reset = true } = {}) => {
-    console.log(`[SEED] Starting database seed (Reset: ${reset})...`);
-    try {
-        await connectDB();
-        console.log('[SEED] Connected to MongoDB');
+    await connectDB();
 
     let company = await Company.findOne({});
     if (!company) {
@@ -523,12 +520,7 @@ const seedDatabase = async ({ reset = true } = {}) => {
         { name: 'Komal Jain', email: 'komal@example.com', phone: '9876502002', message: 'Please share quotation for basement treatment.', status: 'Read' }
     ]);
 
-    console.log('[SEED] Seed process completed successfully');
     return { skipped: false, users: users.length + 1, products: products.length, labours: 0, sites: siteDocs.length };
-} catch (error) {
-    console.error('[SEED] Error during seed process:', error);
-    throw error;
-}
 };
 
 module.exports = { seedDatabase, connectDB };
