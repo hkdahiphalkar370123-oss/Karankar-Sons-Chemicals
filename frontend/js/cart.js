@@ -72,7 +72,7 @@ class ShoppingCart {
         if (!this.isAuthenticated) {
           Toast.warning('Please login to view your cart.');
           setTimeout(() => {
-            window.location.href = '/login.html';
+            window.location.href = '/login';
           }, 1500);
           return;
         }
@@ -271,7 +271,7 @@ class ShoppingCart {
     
     if(badge) {
       badge.textContent = totalItems;
-      badge.style.display = totalItems > 0 ? 'inline-block' : 'none';
+      badge.classList.toggle('visible', totalItems > 0);
     }
 
     container.onclick = async (event) => {
