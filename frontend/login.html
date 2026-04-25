@@ -132,7 +132,7 @@
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data));
 
-        window.location.href = res.data.role === 'admin' ? '/admin/dashboard' : '/';
+        window.location.href = res.data.role === 'admin' ? '/admin' : '/dashboard';
       } catch (err) {
         errorMsg.innerText = err.message;
         errorMsg.style.display = 'block';

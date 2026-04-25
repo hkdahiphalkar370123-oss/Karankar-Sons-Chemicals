@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <td>₹${Number(order.totalAmount || 0).toFixed(2)}</td>
         <td>${statusBadge(status)}</td>
         <td>${formatDate(order.createdAt)}</td>
-        <td><a class="btn btn-action btn-view" href="/order-detail.html?id=${order._id}">View Details</a></td>
+        <td><a class="btn btn-action btn-view" href="/order-detail?id=${order._id}">View Details</a></td>
         <td>
           <select data-order-id="${order._id}" class="status-select form-control status-dropdown">
             <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>

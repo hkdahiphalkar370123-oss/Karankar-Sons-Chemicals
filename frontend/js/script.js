@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const loginLink = linksContainer.querySelector('a[href="login.html"]');
+    const loginLink = linksContainer.querySelector('a[href="/login"]');
     if (loginLink) {
       const loginLi = loginLink.closest('li');
       if (loginLi) {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const dashboardHref = user.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+    const dashboardHref = user.role === 'admin' ? '/admin' : '/dashboard';
     const profileLabel = user.name || (user.role === 'admin' ? 'Admin' : 'User');
     const initial = profileLabel.charAt(0).toUpperCase();
     const li = document.createElement('li');
@@ -122,12 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Set active link in Navbar
-  const currentPath = window.location.pathname.split('/').pop();
+  const currentPath = window.location.pathname;
   const links = document.querySelectorAll('.nav-links a');
   
   links.forEach(link => {
     const linkPath = link.getAttribute('href');
-    if (linkPath === currentPath || (currentPath === '' && linkPath === 'index.html')) {
+    if (linkPath === currentPath || (currentPath === '/' && linkPath === '/')) {
       link.style.color = 'var(--primary-color)';
     }
   });

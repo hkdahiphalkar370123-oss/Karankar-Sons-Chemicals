@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <td>${new Date(order.createdAt).toLocaleDateString()}</td>
         <td>
           <div class="table-actions">
-            <a class="btn btn-action btn-view" href="/order-detail.html?id=${order._id}">View</a>
+            <a class="btn btn-action btn-view" href="/order-detail?id=${order._id}">View</a>
             ${requestButton}
           </div>
         </td>

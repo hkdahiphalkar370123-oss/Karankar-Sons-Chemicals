@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelectorAll('.product-detail-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
-        window.location.href = `product-detail.html?id=${btn.dataset.id}`;
+        window.location.href = `/product-detail?id=${btn.dataset.id}`;
       });
     });
 
