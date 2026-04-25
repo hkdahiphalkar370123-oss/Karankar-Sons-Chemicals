@@ -325,8 +325,8 @@ const seedDatabase = async ({ reset = true } = {}) => {
     await upsertUserAccount({
         companyId: company._id,
         name: 'Platform Admin',
-        email: 'admin@company.com',
-        password: 'Admin@123',
+        email: 'admin@karankar.com',
+        password: 'admin123',
         role: 'admin',
         phone: '9876500001',
         address: 'Karankar Sons Office, MIDC Road',
@@ -337,8 +337,8 @@ const seedDatabase = async ({ reset = true } = {}) => {
     await upsertUserAccount({
         companyId: company._id,
         name: 'Test User',
-        email: 'testuser@gmail.com',
-        password: 'Test@123',
+        email: 'user@karankar.com',
+        password: 'user123',
         role: 'user',
         phone: '9876500099',
         address: 'Demo Address, Pune',
@@ -379,8 +379,8 @@ const seedDatabase = async ({ reset = true } = {}) => {
         userId: uuidv4(),
         companyId: company._id,
         name: 'Platform Admin',
-        email: 'admin@company.com',
-        password: adminPassword,
+        email: 'admin@karankar.com',
+        password: await bcrypt.hash('admin123', 10),
         role: 'admin',
         phone: '9876500001',
         address: 'Karankar Sons Office, MIDC Road',
@@ -389,7 +389,7 @@ const seedDatabase = async ({ reset = true } = {}) => {
     });
 
     const users = await User.create([
-        { userId: uuidv4(), companyId: company._id, name: 'Test User', email: 'testuser@gmail.com', password: await bcrypt.hash('Test@123', 10), role: 'user', phone: '9876500099', address: 'Demo Address, Pune', city: 'Pune', pincode: '411001' },
+        { userId: uuidv4(), companyId: company._id, name: 'Test User', email: 'user@karankar.com', password: await bcrypt.hash('user123', 10), role: 'user', phone: '9876500099', address: 'Demo Address, Pune', city: 'Pune', pincode: '411001' },
         { userId: uuidv4(), companyId: company._id, name: 'Rahul Sharma', email: 'rahul@demo.com', password: await bcrypt.hash('Rahul@123', 10), role: 'user', phone: '9876500011', address: '12 Lake View Colony', city: 'Pune', pincode: '411001' },
         { userId: uuidv4(), companyId: company._id, name: 'Priya Patel', email: 'priya@demo.com', password: await bcrypt.hash('Priya@123', 10), role: 'user', phone: '9876500012', address: '44 Palm Residency', city: 'Ahmedabad', pincode: '380001' },
         { userId: uuidv4(), companyId: company._id, name: 'Amit Verma', email: 'amit@demo.com', password: await bcrypt.hash('Amit@123', 10), role: 'user', phone: '9876500013', address: '3 River Heights', city: 'Indore', pincode: '452001' },
@@ -532,10 +532,10 @@ if (require.main === module) {
                 console.log('Seed skipped because data already exists.');
             } else {
                 console.log(`Seed complete. Users: ${result.users}, Products: ${result.products}, Sites: ${result.sites}`);
-                    console.log('Admin Email: admin@company.com');
-                console.log('Admin Password: Admin@123');
-                console.log('Test User Email: testuser@gmail.com');
-                console.log('Test User Password: Test@123');
+                    console.log('Admin Email: admin@karankar.com');
+                console.log('Admin Password: admin123');
+                console.log('Test User Email: user@karankar.com');
+                console.log('Test User Password: user123');
             }
             process.exit(0);
         })
