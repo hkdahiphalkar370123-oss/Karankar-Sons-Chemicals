@@ -187,11 +187,11 @@ const requireAuth = (role = null) => {
     const token = getToken();
     const user = getCurrentUser();
     if (!token || !user) {
-        window.location.href = '/login.html';
+        window.location.href = '/login';
         return null;
     }
     if (role && user.role !== role) {
-        window.location.href = user.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+        window.location.href = user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard';
         return null;
     }
     return user;
