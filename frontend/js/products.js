@@ -161,7 +161,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         SkeletonLoader.show(grid, 6, 'product');
       }
 
+      const statusEl = document.getElementById('connection-status');
       const response = await window.API.getProducts(params.toString());
+      
+      if (statusEl) {
+        statusEl.style.background = '#e8f5e9';
+        statusEl.style.color = '#2e7d32';
+        statusEl.innerHTML = `🟢 Connected to: ${new URL(window.API_BASE_URL || 'https://karankar-backend.onrender.com/api').hostname}`;
+      }
+
       allProducts = response.data || [];
       
       // Extract pagination metadata if available
@@ -176,8 +184,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       renderProducts();
     } catch (error) {
+      const statusEl = document.getElementById('connection-status');
+      if (statusEl) {
+        statusEl.style.background = '#ffebee';
+        statusEl.style.color = '#c62828';
+        statusEl.innerHTML = `🔴 Connection Failed: ${error.message}`;
+      }
       if (grid) {
-        EmptyState.showError(grid, error.message || 'Failed to load products. Please try again.');
+        EmptyState.showError(grid, `Connection Error: ${error.message}. <br><br><b>Check if your Render URL in js/api.js is correct and FRONTEND_URL is set on Render.</b>`);
       }
     }
   };
