@@ -123,85 +123,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
       setSubmitting(true);
-      setMessage('Creating secure Razorpay payment session...', 'info');
+      setMessage('Processing your order...', 'info');
 
       const orderRes = await window.API.createPaymentOrder({ shippingDetails, serviceRequest });
-      const paymentData = orderRes.data;
-
-      await loadRazorpaySdk();
-
-      const options = {
-        key: paymentData.key,
-        amount: Math.round(Number(paymentData.amount) * 100),
-        currency: paymentData.currency || 'INR',
-        name: 'Karankar Sons & Chemicals',
-        description: 'Secure checkout',
-        order_id: paymentData.razorpayOrderId,
-        prefill: {
-          name: paymentData.name || shippingDetails.fullName,
-          email: paymentData.email || user.email,
-          contact: paymentData.phone || shippingDetails.phone
-        },
-        notes: {
-          source: 'checkout-page',
-          totalAmount: String(paymentData.amount)
-        },
-        theme: {
-          color: '#0f766e'
-        },
-        modal: {
-          ondismiss: () => {
-            setMessage('Payment was cancelled. You can try again.', 'error');
-            setSubmitting(false);
-          }
-        },
-        handler: async (response) => {
-          try {
-            setMessage('Verifying payment...', 'info');
-
-            const verifyRes = await window.API.verifyPayment({
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpaySignature: response.razorpay_signature
-            });
-
-            const verified = verifyRes.data || {};
-            Toast.success(`Payment verified. Order ${verified.orderId} created.`);
-            setMessage('Payment successful. Order created and invoice generated.', 'success');
-
-              setTimeout(() => {
-              window.location.href = '/orders';
-            }, 1800);
-          } catch (error) {
-            setMessage(error.message || 'Payment verification failed. Please retry.', 'error');
-            Toast.error(error.message || 'Payment verification failed');
-            setSubmitting(false);
-          }
-        }
-      };
-
-      const razorpay = new window.Razorpay(options);
-
-      razorpay.on('payment.failed', async (response) => {
-        const errorDescription = response?.error?.description || 'Payment failed';
-        setMessage(`Payment failed: ${errorDescription}`, 'error');
-        Toast.error('Payment failed. You can retry.');
-
-        try {
-          await window.API.reportPaymentFailure({
-            razorpayOrderId: paymentData.razorpayOrderId,
-            errorCode: response?.error?.code,
-            errorDescription
-          });
-        } catch (failureError) {
-          console.error('Payment failure logging error:', failureError);
-        }
-
-        setSubmitting(false);
-      });
-
-      setMessage('Opening Razorpay payment window...', 'info');
-      razorpay.open();
+      
+      if (orderRes.success) {
+        setMessage('Order placed successfully! Redirecting...', 'success');
+        Toast.success('Order placed successfully');
+        
+        setTimeout(() => {
+          window.location.href = '/orders';
+        }, 1500);
+      } else {
+        throw new Error(orderRes.message || 'Failed to place order');
+      }
+    } catch (error) {
+      setSubmitting(false);
+      setMessage(error.message || 'Failed to place order', 'error');
+      Toast.error(error.message || 'Failed to place order');
+    }
     } catch (error) {
       setSubmitting(false);
       setMessage(error.message || 'Failed to start payment', 'error');

@@ -244,11 +244,8 @@ window.API = {
     getOrderById: (id) => apiFetch(`/orders/${id}`, 'GET'),
     updateOrderStatus: (id, status) => apiFetch(`/orders/${id}/status`, 'PUT', { status }),
 
-    // Payments
+    // Orders & Payments
     createPaymentOrder: (payload) => apiFetch('/payment/create-order', 'POST', payload),
-    verifyPayment: (payload) => apiFetch('/payment/verify', 'POST', payload),
-    reportPaymentFailure: (payload) => apiFetch('/payment/failure', 'POST', payload, { showError: false, showLoading: false }),
-    retryPayment: (orderId) => apiFetch(`/payment/retry/${orderId}`, 'POST'),
     getPaymentDetails: (paymentId) => apiFetch(`/payment/${paymentId}`, 'GET'),
     getOrderPaymentStatus: (orderId) => apiFetch(`/payment/order/${orderId}`, 'GET'),
 

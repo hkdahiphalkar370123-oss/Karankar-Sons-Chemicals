@@ -1,26 +1,43 @@
-Frontend:
-HTML5
-CSS3 (Custom Styling with Animations & Glassmorphism)
-Vanilla JavaScript (DOM Manipulation, API Integration)
-Responsive Design (Flexbox, Grid)
+Karankar Sons & Chemicals - Technology Stack
 
-Backend:
-Node.js
-Express.js
-CORS, Body-parser, Dotenv
-Mongoose
+1. Core Architecture
+   - Frontend: Vanilla HTML5, CSS3, JavaScript (ES6+)
+   - Backend: Node.js (v18+), Express.js (v5.x - Web Framework)
+   - Database: MongoDB (NoSQL) with Mongoose (Object Modeling)
 
-Database:
-MongoDB (NoSQL database)
+2. Frontend Technologies
+   - Styling: Vanilla CSS3 with Glassmorphism, CSS Gradients, and Keyframe Animations
+   - Icons: SVG Icons & Font Awesome (optional)
+   - Fonts: Google Fonts (Inter, Outfit, Montserrat)
+   - Real-time: Socket.io-client (for live updates)
+   - API Communication: Fetch API & Axios
 
-Libraries & Dependencies:
-Axios (Frontend API calls - expected if CDN included, else Fetch API used)
-Bcrypt (Password Hashing)
-JSONWebToken (JWT Authentication)
-Mongoose (MongoDB object modeling)
-Dotenv (Environment variables)
-Cors (Cross-Origin Resource Sharing)
+3. Backend & API
+   - Server: Express.js
+   - Authentication: JSON Web Tokens (JWT) for secure session management
+   - Security: 
+     * Bcryptjs (Password hashing)
+     * CORS (Cross-Origin Resource Sharing)
+     * Express-rate-limit (API rate limiting)
+     * Helmet (Basic security headers via Express)
+   - File Uploads: Multer (for handling multipart/form-data)
+   - Email Service: Nodemailer (for order confirmations and contact forms)
+   - Payment Method: Cash on Delivery / Offline Payment (Integrated)
+   - Real-time: Socket.io (Server-side implementation)
 
-Additional Tools:
-Font Awesome (for icons, if needed)
-Google Fonts (Inter, modern typography)
+4. Utilities & Libraries
+   - archiver: For creating system backups
+   - cron: For scheduled database backups
+   - moment: For date and time manipulation
+   - uuid: For generating unique identifiers
+   - compression: For Gzip response compression
+   - morgan: For HTTP request logging
+   - dotenv: For environment variable management
+   - express-async-handler: For clean error handling in async routes
+
+5. Deployment & DevOps
+   - Frontend Hosting: Vercel (https://karankarsonsandchemicals.in)
+   - Backend Hosting: Render (https://karankar-sons-chemicals.onrender.com)
+   - Domain Management: GoDaddy
+   - Version Control: GitHub
+   - Environment: Production & Development configurations (.env files)

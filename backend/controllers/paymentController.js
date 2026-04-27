@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const Razorpay = require('razorpay');
 const asyncHandler = require('express-async-handler');
 const { v4: uuidv4 } = require('uuid');
 
@@ -21,16 +20,7 @@ const {
 
 const { emitEvent } = require('../utils/socket');
 
-const getRazorpayClient = () => {
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-        throw new Error('Razorpay credentials are not configured');
-    }
 
-    return new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID,
-        key_secret: process.env.RAZORPAY_KEY_SECRET
-    });
-};
 
 const buildCheckoutSnapshot = async (userId, companyId) => {
     const cart = await Cart.findOne({ user: userId }).populate('items.product');
@@ -299,7 +289,7 @@ const sendOrderAndInvoiceEmails = async (order, payment, invoice) => {
     }
 };
 
-// @desc    Create Razorpay order for payment
+// @desc    Create Offline Order (Replaces Razorpay flow)
 // @route   POST /api/payment/create-order
 // @access  Private
 exports.createRazorpayOrder = asyncHandler(async (req, res) => {
@@ -313,210 +303,87 @@ exports.createRazorpayOrder = asyncHandler(async (req, res) => {
     }
 
     const { cart, items, totalAmount } = await buildCheckoutSnapshot(req.user._id, req.user.companyId);
-    const razorpay = getRazorpayClient();
 
-    const razorpayOrder = await razorpay.orders.create({
-        amount: Math.round(totalAmount * 100),
-        currency: 'INR',
-        receipt: `PAY-${req.user._id.toString().slice(-6).toUpperCase()}-${Date.now()}`,
-        payment_capture: 1,
-        notes: {
-            userId: req.user._id.toString(),
-            companyId: req.user.companyId.toString(),
-            totalAmount: String(totalAmount),
-            cartItemCount: String(items.length)
-        }
-    });
-
-    const payment = await Payment.create({
-        paymentId: `PAY-${Date.now()}-${uuidv4().slice(0, 6).toUpperCase()}`,
-        orderId: null,
-        user: req.user._id,
-        companyId: req.user.companyId,
-        razorpayOrderId: razorpayOrder.id,
-        amount: totalAmount,
-        currency: 'INR',
-        status: 'Created',
-        method: 'online',
-        customerEmail: req.user.email,
-        customerPhone: shippingDetails.phone,
-        customerName: shippingDetails.fullName,
-        receiptId: razorpayOrder.receipt,
-        checkoutSnapshot: {
-            shippingDetails: {
-                fullName: shippingDetails.fullName,
-                address: shippingDetails.address,
-                phone: shippingDetails.phone,
-                city: shippingDetails.city,
-                pincode: shippingDetails.pincode
-            },
-            serviceRequest: {
-                required: Boolean(serviceRequest.required),
-                projectType: serviceRequest.projectType || 'Repair Work',
-                workType: serviceRequest.workType || 'General Work',
-                expectedEndDate: serviceRequest.expectedEndDate ? new Date(serviceRequest.expectedEndDate) : null,
-                notes: serviceRequest.notes || ''
-            },
-            items,
-            totalAmount
-        }
-    });
-
-    try {
-        authLogger(
-            req.user.email,
-            'PAYMENT_INITIATED',
-            true,
-            req.ip || '0.0.0.0',
-            `Amount: ₹${totalAmount}, Razorpay Order ID: ${razorpayOrder.id}`
-        );
-    } catch (logErr) {
-        console.log('Logging error:', logErr.message);
-    }
-
-    res.status(201).json({
-        success: true,
-        data: {
-            paymentId: payment._id,
-            razorpayOrderId: razorpayOrder.id,
-            amount: totalAmount,
-            currency: 'INR',
-            key: process.env.RAZORPAY_KEY_ID,
-            email: req.user.email,
-            phone: shippingDetails.phone,
-            name: shippingDetails.fullName,
-            cartItems: cart.items.length
-        }
-    });
-});
-
-// @desc    Verify Razorpay payment
-// @route   POST /api/payment/verify
-// @access  Private
-exports.verifyPayment = asyncHandler(async (req, res) => {
-    const razorpayPaymentId = req.body.razorpayPaymentId || req.body.razorpay_payment_id;
-    const razorpayOrderId = req.body.razorpayOrderId || req.body.razorpay_order_id;
-    const razorpaySignature = req.body.razorpaySignature || req.body.razorpay_signature;
-
-    if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature) {
-        res.status(400);
-        throw new Error('Missing payment verification details');
-    }
-
-    let payment = await Payment.findOne({ razorpayOrderId });
-
-    if (!payment) {
-        res.status(404);
-        throw new Error('Payment record not found');
-    }
-
-    if (payment.status === 'Captured' && payment.orderId) {
-        const order = await Order.findById(payment.orderId)
-            .populate('items.product')
-            .populate('serviceSite', 'siteId customerName status projectType workType')
-            .populate('user', 'name email phone');
-
-        const invoice = await buildInvoiceFromOrder(order);
-
-        return res.status(200).json({
-            success: true,
-            message: 'Payment already verified',
-            data: {
-                paymentId: payment._id,
-                orderId: order._id,
-                invoiceId: invoice._id,
-                amount: payment.amount,
-                transactionId: payment.razorpayPaymentId,
-                status: 'Completed'
-            }
-        });
-    }
-
-    const expectedSignature = crypto
-        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-        .update(`${razorpayOrderId}|${razorpayPaymentId}`)
-        .digest('hex');
-
-    if (razorpaySignature !== expectedSignature) {
-        res.status(400);
-        throw new Error('Payment signature verification failed');
-    }
-
-    const razorpay = getRazorpayClient();
-    const paymentDetails = await razorpay.payments.fetch(razorpayPaymentId);
-
-    if (!paymentDetails || paymentDetails.status !== 'captured') {
-        res.status(400);
-        throw new Error(`Payment not captured. Status: ${paymentDetails ? paymentDetails.status : 'unknown'}`);
-    }
-
-    // Now start the transaction for atomic local state updates
     const session = await mongoose.startSession();
     session.startTransaction();
 
-    let order;
-    let invoice;
-
     try {
-        // Refetch payment under this session to ensure we have the transactional lock context
-        payment = await Payment.findOne({ razorpayOrderId }).session(session);
+        const payment = await Payment.create([{
+            paymentId: `PAY-${Date.now()}-${uuidv4().slice(0, 6).toUpperCase()}`,
+            orderId: null,
+            user: req.user._id,
+            companyId: req.user.companyId,
+            amount: totalAmount,
+            currency: 'INR',
+            status: 'Pending',
+            method: 'offline',
+            customerEmail: req.user.email,
+            customerPhone: shippingDetails.phone,
+            customerName: shippingDetails.fullName,
+            receiptId: `REC-${Date.now()}`,
+            checkoutSnapshot: {
+                shippingDetails,
+                serviceRequest,
+                items,
+                totalAmount
+            }
+        }], { session });
 
-        payment.razorpayPaymentId = razorpayPaymentId;
-        payment.razorpaySignature = razorpaySignature;
-        payment.status = 'Captured';
-        payment.capturedAt = new Date();
-        payment.authorizedAt = payment.authorizedAt || new Date();
-        payment.transactionId = razorpayPaymentId;
-        await payment.save({ session });
+        const order = await buildOrderFromPayment(payment[0], session);
+        payment[0].orderId = order._id;
+        await payment[0].save({ session });
 
-        order = await buildOrderFromPayment(payment, session);
-        payment.orderId = order._id;
-        payment.status = 'Captured';
-        await payment.save({ session });
-
-        invoice = await buildInvoiceFromOrder(order, session);
+        const invoice = await buildInvoiceFromOrder(order, session);
         
         await session.commitTransaction();
-    } catch (sessionError) {
-        await session.abortTransaction();
-        throw sessionError;
-    } finally {
         session.endSession();
+
+        // Send emails and log after successful transaction
+        await sendOrderAndInvoiceEmails(order, payment[0], invoice);
+
+        try {
+            authLogger(
+                req.user.email,
+                'ORDER_PLACED_OFFLINE',
+                true,
+                req.ip || '0.0.0.0',
+                `Amount: ₹${totalAmount}, Order ID: ${order.orderId}`
+            );
+        } catch (logErr) {
+            console.log('Logging error:', logErr.message);
+        }
+
+        // Emit real-time update
+        emitEvent('NEW_ORDER', {
+            orderId: order.orderId,
+            amount: totalAmount,
+            customerName: shippingDetails.fullName
+        }, `company_${req.user.companyId}`);
+
+        res.status(201).json({
+            success: true,
+            message: 'Order placed successfully',
+            data: {
+                orderId: order._id,
+                orderNumber: order.orderId,
+                totalAmount
+            }
+        });
+
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        throw error;
     }
+});
 
-    // Post-transaction tasks (Emails, Logs should not block the transaction success)
-    await sendOrderAndInvoiceEmails(order, payment, invoice);
-
-    try {
-        authLogger(
-            payment.customerEmail,
-            'PAYMENT_SUCCESS',
-            true,
-            req.ip || '0.0.0.0',
-            `Amount: ₹${payment.amount}, Transaction ID: ${razorpayPaymentId}`
-        );
-    } catch (logErr) {
-        console.log('Logging error:', logErr.message);
-    }
-
-    // Emit real-time payment success
-    emitEvent('PAYMENT_SUCCESS', {
-        orderId: order.orderId,
-        amount: payment.amount,
-        customerName: payment.customerName
-    }, `company_${payment.companyId}`);
-
+// @desc    Verify payment (Legacy/Placeholder)
+// @route   POST /api/payment/verify
+// @access  Private
+exports.verifyPayment = asyncHandler(async (req, res) => {
     res.status(200).json({
         success: true,
-        message: 'Payment verified successfully',
-        data: {
-            paymentId: payment._id,
-            orderId: order._id,
-            invoiceId: invoice._id,
-            amount: payment.amount,
-            transactionId: razorpayPaymentId,
-            status: 'Completed'
-        }
+        message: 'Offline payment verification is handled by admin'
     });
 });
 
