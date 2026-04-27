@@ -24,8 +24,10 @@ const syncCart = async () => {
   }
 };
 
-// Auto sync on load
-syncCart();
+// Auto sync on load if logged in
+if (localStorage.getItem('token')) {
+  syncCart();
+}
 
 // Export for other scripts
 window.syncCart = syncCart;
