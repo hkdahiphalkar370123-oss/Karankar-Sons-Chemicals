@@ -1,5 +1,10 @@
-const API_BASE_URL = window.location.origin + '/api';
-const SOCKET_URL = window.location.origin;
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'
+    : 'https://karankar-sons-chemicals.onrender.com/api';
+
+const SOCKET_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000'
+    : 'https://karankar-sons-chemicals.onrender.com';
 
 // Socket.io initialization
 let socket;
