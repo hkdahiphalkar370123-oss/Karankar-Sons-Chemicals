@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Karankar Sons | Waterproofing Solutions That Last</title>
+  <link rel="preload" href="/css/style.css" as="style">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/feedback.css">
-  <script src="/js/api.js"></script>
-  <script src="/js/ui-components.js"></script>
+  <script src="/js/api.js" defer></script>
+  <script src="/js/ui-components.js" defer></script>
 </head>
 <body>
   <!-- Navbar -->
@@ -125,7 +126,9 @@
       </div>
       <div class="grid-3">
         <div class="card" style="background: #1a2327; border: 1px solid #37474F; padding: 0; overflow: hidden; transform-style: preserve-3d; transition: transform 0.3s;">
-          <div style="height: 200px; background: url('assets/img/chemical_coating.png') center/cover;"></div>
+          <div style="height: 200px; overflow: hidden;">
+            <img src="assets/img/chemical_coating.png" alt="Chemical Coating" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+          </div>
           <div style="padding: 1.5rem;">
             <h3 style="color: #fff; margin-bottom: 0.5rem;">KS FlexiCoat 500</h3>
             <p style="color: #90A4AE; font-size: 0.9rem; margin-bottom: 1.5rem;">Elastomeric exterior waterproof coating</p>
@@ -133,7 +136,9 @@
           </div>
         </div>
         <div class="card" style="background: #1a2327; border: 1px solid #37474F; padding: 0; overflow: hidden; transform-style: preserve-3d; transition: transform 0.3s;">
-          <div style="height: 200px; background: url('assets/img/wall_protection.png') center/cover;"></div>
+          <div style="height: 200px; overflow: hidden;">
+            <img src="assets/img/wall_protection.png" alt="Wall Protection" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+          </div>
           <div style="padding: 1.5rem;">
             <h3 style="color: #fff; margin-bottom: 0.5rem;">KS DampGuard Pro</h3>
             <p style="color: #90A4AE; font-size: 0.9rem; margin-bottom: 1.5rem;">Interior dampness resistant formulation</p>
@@ -141,7 +146,9 @@
           </div>
         </div>
         <div class="card" style="background: #1a2327; border: 1px solid #37474F; padding: 0; overflow: hidden; transform-style: preserve-3d; transition: transform 0.3s;">
-          <div style="height: 200px; background: url('assets/img/basement_waterproofing.png') center/cover;"></div>
+          <div style="height: 200px; overflow: hidden;">
+            <img src="assets/img/basement_waterproofing.png" alt="Basement Waterproofing" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+          </div>
           <div style="padding: 1.5rem;">
             <h3 style="color: #fff; margin-bottom: 0.5rem;">KS RoofSeal</h3>
             <p style="color: #90A4AE; font-size: 0.9rem; margin-bottom: 1.5rem;">Heavy duty terrace membrane</p>
@@ -227,7 +234,9 @@
           </ul>
         </div>
         <div>
-          <div style="background: url('assets/img/industrial_waterproofing.png') center/cover; height: 400px; border-radius: var(--border-radius); box-shadow: 0 10px 30px var(--shadow-color);"></div>
+          <div style="height: 400px; border-radius: var(--border-radius); box-shadow: 0 10px 30px var(--shadow-color); overflow: hidden;">
+            <img src="assets/img/industrial_waterproofing.png" alt="Industrial Waterproofing" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+          </div>
         </div>
       </div>
     </div>
@@ -245,28 +254,33 @@
               <span style="font-size: 1.5rem;">📍</span>
               <div>
                 <strong>Head Office</strong>
-                <p style="margin: 0; color: #666;">123 Industrial Estate, Mumbai, Maharashtra</p>
+                <p style="margin: 0; color: #666;">105, First Floor, Shree Ganesh Galaxy, Gangapur Road, Swargiya Sitamai Sawliram Kale Marg, Balawant Nagar, Anandvalli, Nashik, Maharashtra 422013, India</p>
               </div>
             </div>
             <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem;">
               <span style="font-size: 1.5rem;">📞</span>
               <div>
                 <strong>Phone</strong>
-                <p style="margin: 0; color: #666;">+91 98765 43210</p>
+                <p style="margin: 0; color: #666;">+91 9371312659</p>
               </div>
             </div>
             <div style="display: flex; gap: 1rem; align-items: flex-start;">
               <span style="font-size: 1.5rem;">✉️</span>
               <div>
                 <strong>Email</strong>
-                <p style="margin: 0; color: #666;">info@karankarsons.com</p>
+                <p style="margin: 0; color: #666;">armour5611@gmail.com</p>
               </div>
             </div>
           </div>
-          <!-- Google Maps Placeholder -->
-          <div style="background: #e0e0e0; height: 200px; border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; color: #666;">
-            [ Google Maps Placeholder ]
-          </div>
+          <!-- Google Maps Iframe -->
+          <iframe 
+            src="https://maps.google.com/maps?q=Shree%20Ganesh%20Galaxy,%20Gangapur%20Road,%20Anandvalli,%20Nashik,%20Maharashtra%20422013&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+            width="100%" 
+            height="250" 
+            style="border:0; border-radius: var(--border-radius); box-shadow: 0 4px 15px var(--shadow-color);" 
+            allowfullscreen="" 
+            loading="lazy">
+          </iframe>
         </div>
         <div>
           <div class="card">
@@ -317,9 +331,9 @@
         <div class="footer-col">
           <h3>Contact</h3>
           <ul style="color: #90A4AE;">
-            <li>📞 +91 98765 43210</li>
-            <li>✉️ info@karankarsons.com</li>
-            <li>📍 Mumbai, Maharashtra</li>
+            <li>📞 +91 9371312659</li>
+            <li>✉️ armour5611@gmail.com</li>
+            <li>📍 Nashik, Maharashtra</li>
           </ul>
         </div>
       </div>
@@ -329,8 +343,8 @@
     </div>
   </footer>
 
-  <script src="/js/pagination.js"></script>
-  <script src="/js/cart.js"></script>
-  <script src="/js/script.js"></script>
+  <script src="/js/pagination.js" defer></script>
+  <script src="/js/cart.js" defer></script>
+  <script src="/js/script.js" defer></script>
 </body>
 </html>
