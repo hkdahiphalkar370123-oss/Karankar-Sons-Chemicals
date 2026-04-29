@@ -47,7 +47,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       card.style.display = 'flex';
       card.style.flexDirection = 'column';
       card.innerHTML = `
-        <div style="height: 180px; background: url('${imageUrl}') center/cover;"></div>
+        <div style="height: 180px; overflow: hidden;">
+          <img src="${imageUrl}" alt="${p.productName}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+        </div>
         <div style="padding: 1.25rem; flex-grow: 1; display: flex; flex-direction: column;">
           <span style="font-size: 0.75rem; color: var(--primary-color); font-weight: bold; margin-bottom: 0.5rem; text-transform: uppercase;">${p.category}</span>
           <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${p.productName}</h3>

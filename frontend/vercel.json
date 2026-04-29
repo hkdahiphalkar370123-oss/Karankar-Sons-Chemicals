@@ -16,5 +16,25 @@
     { "source": "/profile", "destination": "/user-dashboard.html" },
     { "source": "/cart", "destination": "/user-dashboard.html" }
   ],
+  "headers": [
+    {
+      "source": "/(css|js|assets)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    }
+  ],
   "trailingSlash": false
 }

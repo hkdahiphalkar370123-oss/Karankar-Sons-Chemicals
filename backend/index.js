@@ -76,14 +76,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Performance: Compression Middleware (gzip responses in production)
-if (isProduction) {
-    app.use(compression({
-        threshold: 1000, // Only compress responses larger than 1KB
-        level: 6 // Compression level (1-9)
-    }));
-    console.log('✅ Response compression enabled (production)');
-}
+// Performance: Compression Middleware (gzip responses)
+app.use(compression({
+    threshold: 1000, // Only compress responses larger than 1KB
+    level: 6 // Compression level (1-9)
+}));
+console.log('✅ Response compression enabled');
 
 // Security: Rate Limiting - Prevent API abuse
 const isLocalRequest = (req) => {
