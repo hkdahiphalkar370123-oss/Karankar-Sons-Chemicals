@@ -226,7 +226,7 @@ window.API = {
     deleteSite: (id) => apiFetch(`/sites/${id}`, 'DELETE'),
     updateSiteStatus: (id, status) => apiFetch(`/sites/${id}/status`, 'PUT', { status }),
 
-    getProducts: (params = '') => apiFetch(`/products${params ? `?${params}` : ''}`, 'GET'),
+    getProducts: (params = '') => apiFetch(`/products${params ? `?${params}` : ''}`, 'GET', null, { showLoading: false }),
     getProductById: (id) => apiFetch(`/products/${id}`, 'GET'),
     getCategories: () => apiFetch('/products/categories/list', 'GET'),
     createProduct: (formData) => apiFetch('/products', 'POST', formData), // Multipart

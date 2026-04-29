@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentCategory = '';
   let currentSearchTerm = '';
   let searchTimer = null;
+  let productCache = {}; // Simple cache for product queries
 
   const effectivePrice = (product) => {
     const discount = product.discountPercent || 0;
@@ -20,6 +21,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!imageUrl) return 'assets/img/chemical_coating.png';
     // If it's a full URL (like Unsplash), use it directly
     if (imageUrl.startsWith('http')) {
+      if (imageUrl.includes('unsplash.com') && !imageUrl.includes('w=')) {
+        return imageUrl.includes('?') ? `${imageUrl}&w=600&q=80` : `${imageUrl}?w=600&q=80`;
+      }
       return imageUrl;
     }
     // If it's a relative path starting with /, use as is
@@ -157,9 +161,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     params.set('page', currentPage);
     params.set('limit', 10); // 10 products per page
 
+    const queryKey = params.toString();
+
+    // Check cache
+    if (productCache[queryKey]) {
+      allProducts = productCache[queryKey].data;
+      totalPages = productCache[queryKey].totalPages;
+      currentPage = productCache[queryKey].currentPage;
+      renderProducts();
+      // Continue to fetch in background to keep data fresh (stale-while-revalidate)
+    }
+
     try {
-      // Show skeleton loaders
-      if (grid) {
+      // Show skeleton loaders only if we don't have cached data
+      if (!productCache[queryKey] && grid) {
         SkeletonLoader.show(grid, 6, 'product');
       }
 
@@ -183,6 +198,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         totalPages = 1;
         currentPage = 1;
       }
+
+      // Update cache
+      productCache[queryKey] = {
+        data: allProducts,
+        totalPages,
+        currentPage
+      };
       
       renderProducts();
     } catch (error) {

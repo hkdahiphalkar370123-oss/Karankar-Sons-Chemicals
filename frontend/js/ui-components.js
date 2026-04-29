@@ -160,12 +160,24 @@ class LoadingIndicator {
 class SkeletonLoader {
     static createProductSkeleton() {
         return `
-            <div class="skeleton-card">
-                <div class="skeleton skeleton-img"></div>
-                <div class="skeleton skeleton-line" style="width: 80%; margin: 8px 0;"></div>
-                <div class="skeleton skeleton-line" style="width: 60%; margin: 8px 0;"></div>
-                <div class="skeleton skeleton-line" style="width: 40%; margin: 8px 0;"></div>
-                <div class="skeleton skeleton-btn"></div>
+            <div class="skeleton-card card" style="display: flex; flex-direction: column; height: 100%;">
+                <div class="skeleton skeleton-img" style="height: 180px; width: 100%;"></div>
+                <div style="padding: 1.25rem; flex-grow: 1; display: flex; flex-direction: column;">
+                    <div class="skeleton skeleton-line" style="width: 30%; height: 12px; margin-bottom: 0.5rem;"></div>
+                    <div class="skeleton skeleton-line" style="width: 80%; height: 20px; margin-bottom: 0.5rem;"></div>
+                    <div class="skeleton skeleton-line" style="width: 100%; height: 14px; margin-bottom: 4px;"></div>
+                    <div class="skeleton skeleton-line" style="width: 90%; height: 14px; flex-grow: 1;"></div>
+                    <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        <div class="skeleton skeleton-line" style="width: 40%; height: 14px; margin-bottom: 0.5rem;"></div>
+                        <div class="skeleton skeleton-line" style="width: 30%; height: 14px; margin-bottom: 0.5rem;"></div>
+                        <div class="skeleton skeleton-line" style="width: 50%; height: 30px; margin-bottom: 1rem;"></div>
+                        <div class="skeleton skeleton-line" style="width: 40%; height: 18px; margin-bottom: 1rem;"></div>
+                        <div style="display:flex; gap: 0.5rem;">
+                             <div class="skeleton skeleton-btn" style="width: 100%; height: 38px; border-radius: 4px;"></div>
+                             <div class="skeleton skeleton-btn" style="width: 100%; height: 38px; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     }

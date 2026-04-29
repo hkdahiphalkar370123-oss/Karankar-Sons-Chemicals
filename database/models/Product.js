@@ -16,4 +16,16 @@ const productSchema = new mongoose.Schema({
     status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' }
 }, { timestamps: true });
 
+// Indexes for performance optimization
+productSchema.index({ category: 1 });
+productSchema.index({ 
+    productId: 'text',
+    productName: 'text', 
+    description: 'text', 
+    category: 'text' 
+}, { 
+    weights: { productName: 10, productId: 8, category: 5, description: 1 },
+    name: "ProductTextIndex"
+});
+
 module.exports = mongoose.model('Product', productSchema);
