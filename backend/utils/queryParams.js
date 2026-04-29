@@ -1,17 +1,23 @@
-const getSearchTerm = (req) => {
-    const direct = req.query?.search || req.query?.q;
-    if (direct) {
-        return direct;
-    }
+const escapeRegex = (string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
 
-    try {
-        const url = new URL(req.originalUrl, `${req.protocol}://${req.get('host')}`);
-        return url.searchParams.get('search') || url.searchParams.get('q') || '';
-    } catch (error) {
-        return '';
+const getSearchTerm = (req) => {
+    let term = req.query?.search || req.query?.q;
+    
+    if (!term) {
+        try {
+            const url = new URL(req.originalUrl, `${req.protocol}://${req.get('host')}`);
+            term = url.searchParams.get('search') || url.searchParams.get('q') || '';
+        } catch (error) {
+            term = '';
+        }
     }
+    
+    return term ? escapeRegex(term) : '';
 };
 
 module.exports = {
-    getSearchTerm
+    getSearchTerm,
+    escapeRegex
 };

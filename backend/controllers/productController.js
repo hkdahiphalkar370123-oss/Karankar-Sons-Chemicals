@@ -16,7 +16,12 @@ const getProducts = asyncHandler(async (req, res) => {
         query.category = category;
     }
     if (searchTerm) {
-        query.$text = { $search: searchTerm };
+        query.$or = [
+            { productId: { $regex: searchTerm, $options: 'i' } },
+            { productName: { $regex: searchTerm, $options: 'i' } },
+            { description: { $regex: searchTerm, $options: 'i' } },
+            { category: { $regex: searchTerm, $options: 'i' } }
+        ];
     }
 
     let sortOption = { createdAt: -1 };
