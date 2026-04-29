@@ -422,6 +422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <td>${statusBadge(quotation.status)}</td>
         <td>
           <div class="table-actions action-buttons">
+            <button class="btn btn-action btn-view" data-quotation-action="view" data-id="${quotation._id}">View</button>
             <button class="btn btn-action btn-edit" data-quotation-action="edit" data-id="${quotation._id}">Edit</button>
             <button class="btn btn-action btn-delete" data-quotation-action="delete" data-id="${quotation._id}">Delete</button>
             <button class="btn btn-action btn-view" data-quotation-action="convert" data-id="${quotation._id}">Convert</button>
@@ -838,6 +839,47 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!button) return;
       const quotation = quotationsCache.find((item) => item._id === button.dataset.id);
       if (!quotation) return;
+
+      if (button.dataset.quotationAction === 'view') {
+        const printable = window.open('', '_blank');
+        printable.document.write(`
+          <html><head><title>Quotation ${quotation.quotationId}</title></head><body>
+          <h2>Karankar Sons & Chemicals</h2>
+          <hr>
+          <p><strong>Quotation Number:</strong> ${quotation.quotationId}</p>
+          <p><strong>Date:</strong> ${new Date(quotation.createdAt).toLocaleDateString()}</p>
+          <p><strong>Customer:</strong> ${quotation.customerName}</p>
+          <p><strong>Phone:</strong> ${quotation.customerPhone}</p>
+          <p><strong>Email:</strong> ${quotation.customerEmail || 'N/A'}</p>
+          <p><strong>Site Address:</strong> ${quotation.siteAddress}</p>
+          <p><strong>Project Type:</strong> ${quotation.projectType}</p>
+          <p><strong>Work Type:</strong> ${quotation.workType}</p>
+          <table border="1" cellspacing="0" cellpadding="6" width="100%">
+            <thead><tr><th>Description</th><th>Area</th><th>Rate</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>${quotation.surfaceType} Waterproofing</td>
+                <td>${quotation.area} sq.ft</td>
+                <td>₹${Number(quotation.pricePerSqft || 0).toFixed(2)}</td>
+                <td>₹${Number(quotation.baseAmount || 0).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><strong>Material Cost:</strong> ₹${Number(quotation.materialCost || 0).toFixed(2)}</p>
+          <p><strong>Labour Cost:</strong> ₹${Number(quotation.labourCost || 0).toFixed(2)}</p>
+          <p><strong>Additional Charges:</strong> ₹${Number(quotation.additionalCharges || 0).toFixed(2)}</p>
+          <p><strong>Subtotal:</strong> ₹${Number(quotation.subtotal || quotation.baseAmount || 0).toFixed(2)}</p>
+          <p><strong>Discount (${quotation.discount || 0}%):</strong> -₹${Number(quotation.discountAmount || 0).toFixed(2)}</p>
+          <p><strong>GST (${quotation.gst || 0}%):</strong> ₹${Number(quotation.gstAmount || 0).toFixed(2)}</p>
+          <h3>Final Amount: ₹${Number(quotation.finalAmount || quotation.totalEstimatedCost || 0).toFixed(2)}</h3>
+          <p><strong>Notes:</strong> ${quotation.notes || 'None'}</p>
+          <p><strong>Status:</strong> ${quotation.status}</p>
+          <button onclick="window.print()">Print / Save PDF</button>
+          </body></html>
+        `);
+        printable.document.close();
+        return;
+      }
 
       if (button.dataset.quotationAction === 'edit') {
         const nextStatus = safePrompt('Update status (Draft/Sent/Approved/Rejected):', quotation.status);
