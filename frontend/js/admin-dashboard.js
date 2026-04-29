@@ -930,6 +930,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       } catch (error) {
         showSiteMessage(error.message, true);
+        siteDetails.innerHTML = `<div class="empty-state" style="padding: 2rem; text-align: center; color: var(--text-color);"><span style="font-size: 2rem; display: block; margin-bottom: 1rem;">⚠️</span><span>Failed to load site details. Please try again.</span></div>`;
       }
       return;
     }

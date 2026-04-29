@@ -142,10 +142,5 @@ document.addEventListener('DOMContentLoaded', async () => {
       setMessage(error.message || 'Failed to place order', 'error');
       Toast.error(error.message || 'Failed to place order');
     }
-    } catch (error) {
-      setSubmitting(false);
-      setMessage(error.message || 'Failed to start payment', 'error');
-      Toast.error(error.message || 'Failed to start payment');
-    }
   });
 });
