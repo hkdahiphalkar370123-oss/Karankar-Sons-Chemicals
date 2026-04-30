@@ -208,7 +208,7 @@ app.get([
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-app.get(['/dashboard', '/orders', '/profile', '/cart', '/dashboard/bookings', '/dashboard/sites', '/dashboard/invoices'], (req, res) => {
+app.get(['/dashboard', '/user-dashboard', '/orders', '/profile', '/cart', '/dashboard/bookings', '/dashboard/sites', '/dashboard/invoices'], (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/user-dashboard.html'));
 });
 
@@ -218,7 +218,7 @@ app.use(['/admin-dashboard.html', '/user-dashboard.html'], (req, res) => {
 });
 
 // Admin Routes - Client-side JS handles actual authentication via localStorage
-app.get(['/admin', '/admin/*path'], (req, res) => {
+app.get(['/admin', '/admin-dashboard', '/admin/*path'], (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/admin-dashboard.html'));
 });
 

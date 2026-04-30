@@ -142,7 +142,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
         throw new Error('User already exists');
     }
 
-    const company = await Company.findOne({});
+    const company = await Company.findOne({}).setOptions({ skipTenantFilter: true });
     if (!company) {
         res.status(500);
         throw new Error('Company is not initialized. Please seed the database first.');

@@ -1015,7 +1015,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (sectionLink) sectionLink.click();
   });
 
+  const loadAllData = async () => {
+    try {
+      await Promise.all([loadMainModules(), loadServiceModules()]);
+      await loadAdvancedModules();
+    } catch (err) {
+      console.error('Data refresh error:', err);
+      // Show actual error message to the user
+      Toast.error(`Failed to sync: ${err.message || 'Unknown error'}`);
+      
+      const tables = [productsTable, ordersTable, usersTable, sitesTable, quotationsTable, bookingsTable, invoicesTable];
+      tables.forEach(table => {
+        if (table && table.innerHTML.includes('loading-state')) {
+          table.innerHTML = emptyRow(8, 'Failed to load data. Please refresh.');
+        }
+      });
+    }
+  };
+
+  window.loadAllData = loadAllData;
+
   initSearchToolbars();
-  await Promise.all([loadMainModules(), loadServiceModules()]);
-  await loadAdvancedModules();
+  await loadAllData();
 });

@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const dashboardHref = user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard';
+    const dashboardHref = user.role === 'admin' ? '/admin' : '/dashboard';
     const profileLabel = user.name || (user.role === 'admin' ? 'Admin' : 'User');
     const initial = profileLabel.charAt(0).toUpperCase();
     const li = document.createElement('li');

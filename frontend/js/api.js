@@ -1,10 +1,6 @@
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000/api'
-    : 'https://karankar-sons-chemicals.onrender.com/api';
+const API_BASE_URL = '/api';
 
-const SOCKET_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000'
-    : 'https://karankar-sons-chemicals.onrender.com';
+const SOCKET_URL = window.location.origin;
 
 // Socket.io initialization
 let socket;
@@ -191,7 +187,7 @@ const requireAuth = (role = null) => {
         return null;
     }
     if (role && user.role !== role) {
-        window.location.href = user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard';
+        window.location.href = user.role === 'admin' ? '/admin' : '/dashboard';
         return null;
     }
     return user;

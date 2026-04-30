@@ -7,9 +7,9 @@ const Service = require('../../database/models/Service');
 const getAdminAnalytics = asyncHandler(async (req, res) => {
     const companyId = req.user.companyId;
     const [orders, sites, quotations] = await Promise.all([
-        Order.find({ companyId }),
-        Site.find({ companyId }),
-        Estimate.find({ companyId })
+        Order.find({ companyId }).lean(),
+        Site.find({ companyId }).lean(),
+        Estimate.find({ companyId }).lean()
     ]);
 
     const totalRevenue = orders.reduce((sum, order) => sum + Number(order.totalAmount || 0), 0);

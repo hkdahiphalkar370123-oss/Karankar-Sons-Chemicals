@@ -1,8 +1,8 @@
 const { getTenant, skipTenantScope } = require('../middlewares/tenantScope');
 
 function tenantPlugin(schema) {
-    // If the schema doesn't have companyId, don't apply the plugin
-    if (!schema.path('companyId')) return;
+    // If the schema doesn't have companyId, or if it's the Company model itself, don't apply the plugin
+    if (!schema.path('companyId') || schema.options.collection === 'companies') return;
 
     const applyTenantFilter = function() {
         // Exclude if explicitly bypassing scoping
